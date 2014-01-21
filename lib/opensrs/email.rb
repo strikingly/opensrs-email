@@ -1,4 +1,3 @@
-require "opensrs/email/version"
 
 require 'socket'
 require 'openssl'
@@ -31,7 +30,7 @@ module Opensrs
         response = login
         @logger.info("Login response:\n#{response}")
 
-        if /^OK.*/ =~ response
+        if response[:status] == 'OK'
           @loggedin = true
         else
           @loggedin = false
@@ -93,7 +92,15 @@ module Opensrs
       end
 
       def receive_response
-        build_response("")
+        response = build_response("")
+        match_data = /^(OK|ER) (\d+).*/.match(response)
+        status = match_data[1] if match_data and match_data.length > 2
+        status_code = match_data[2] if match_data and match_data.length > 2
+        return {
+          :status => status,
+          :status_code => status_code.to_i,
+          :response_body => response
+        }
       end
 
       def build_response(partial)
