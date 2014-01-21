@@ -81,7 +81,7 @@ module Opensrs
         cmd << " #{attr}"
         cmd = "#{cmd}\r\n.\r\n"
         send_command(cmd)
-        receive_response.split("\r\n")
+        receive_response
       end
 
       def send_command(command)
