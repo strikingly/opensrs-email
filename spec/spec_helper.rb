@@ -1,0 +1,2 @@
+require 'opensrs/email.rb'
+

@@ -1,5 +1,9 @@
 require "opensrs/email/version"
 
+require File.dirname(__FILE__) + '/email/domain'
+require File.dirname(__FILE__) + '/email/workgroup'
+require File.dirname(__FILE__) + '/email/mailbox'
+
 require 'socket'
 require 'openssl'
 require 'logger'
@@ -10,6 +14,11 @@ LOGGER.level = Logger::INFO
 module Opensrs
   module Email
     class Gateway
+
+      include Opensrs::Email::Domain
+      include Opensrs::Email::Mailbox
+      include Opensrs::Email::Workgroup
+      
       def initialize(server, port, user, domain, password, version = '3.4', logger = LOGGER)
         @server = server
         @port = port
@@ -74,18 +83,6 @@ module Opensrs
         @socket = @connection = nil
       end
 
-      def create_domain(domain)
-        call(:create_domain, {:domain => domain})
-      end
-
-      def create_mailbox_forward_only(mailbox, domain, forward_email, workgroup)
-        call(:create_mailbox_forward_only, {:mailbox => mailbox, :domain => domain, :forward_email => forward_email, :workgroup => workgroup})
-      end
-
-      def delete_mailbox_forward_only(mailbox, domain)
-        call(:delete_mailbox_forward_only, {:mailbox => mailbox, :domain => domain})
-      end
-      
       def call(command, attributes = {})
         cmd = command.to_s
         attr = attributes.map {|k, v|
@@ -106,6 +103,10 @@ module Opensrs
 
       def receive_response
         response = build_response("")
+        parse_response(response)
+      end
+
+      def parse_response(response)
         match_data = /^(OK|ER) (\d+).*/.match(response)
         status = match_data[1] if match_data and match_data.length > 2
         status_code = match_data[2] if match_data and match_data.length > 2
