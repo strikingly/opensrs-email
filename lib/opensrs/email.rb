@@ -73,6 +73,18 @@ module Opensrs
         @socket = @connection = nil
       end
 
+      def create_domain(domain)
+        call(:create_domain, {:domain => domain})
+      end
+
+      def create_mailbox_forward_only(mailbox, domain, forward_email, workgroup)
+        call(:create_mailbox_forward_only, {:mailbox => mailbox, :domain => domain, :forward_email => forward_email, :workgroup => workgroup})
+      end
+
+      def delete_mailbox_forward_only(mailbox, domain)
+        call(:delete_mailbox_forward_only, {:mailbox => mailbox, :domain => domain})
+      end
+      
       def call(command, attributes = {})
         cmd = command.to_s
         attr = attributes.map {|k, v|
