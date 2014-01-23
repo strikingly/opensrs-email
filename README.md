@@ -18,15 +18,10 @@ Or install it yourself as:
 
 ## Usage
 
-    PRODSRS = OpensrsEmail.new(server, port, username, domain, password)
+    gateway = Opensrs::Email::Gateway.new(OPENSRS_EMAIL_SERVER, OPENSRS_EMAIL_PORT, OPENSRS_EMAIL_USERNAME, OPENSRS_EMAIL_DOMAIN, OPENSRS_EMAIL_PASSWORD)
 
-    domain = 'testdomain.com'
+    gateway.delete_mailbox_forward_only(mailbox, domain)
     
-    TESTSRS.call(:create_domain, {:domain => domain})
-    TESTSRS.call(:create_mailbox, {:domain => domain, :workgroup => "staff", :mailbox => "julie", :password => "julia"})
-    TESTSRS.call(:verify_password, {:domain => domain, :mailbox => "julie", :password => "julia"})
-    TESTSRS.call(:set_mailbox_forward, {:mailbox => "julie", :domain => domain, :forward => "user@anotherdomain.com"})
-
 ## Contributing
 
 1. Fork it
