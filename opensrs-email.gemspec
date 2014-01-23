@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Opensrs::Email::VERSION
   spec.authors       = ["Li Zhenchao"]
   spec.email         = ["zhenchao@strikingly.com"]
-  spec.description   = %q{API to manage opensrs domain emails through APP (OpenSRS Email Service Account Provisioning Protocol)}
+  spec.description   = %q{opensrs-email}
   spec.summary       = %q{API to manage opensrs domain emails through APP (OpenSRS Email Service Account Provisioning Protocol)}
   spec.homepage      = ""
   spec.license       = "MIT"

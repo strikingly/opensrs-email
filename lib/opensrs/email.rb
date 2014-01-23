@@ -1,3 +1,4 @@
+require "opensrs/email/version"
 
 require 'socket'
 require 'openssl'
