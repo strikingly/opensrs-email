@@ -1,8 +1,8 @@
 require "opensrs/email/version"
 
-require File.dirname(__FILE__) + '/email/domain'
-require File.dirname(__FILE__) + '/email/workgroup'
-require File.dirname(__FILE__) + '/email/mailbox'
+require 'opensrs/email/domain'
+require 'opensrs/email/workgroup'
+require 'opensrs/email/mailbox'
 
 require 'socket'
 require 'openssl'
@@ -83,15 +83,24 @@ module Opensrs
         @socket = @connection = nil
       end
 
-      def call(command, attributes = {})
+      def make_command_string(command, attributes)
         cmd = command.to_s
         attr = attributes.map {|k, v|
           "#{k.to_s}=\"#{v.to_s}\""
         } .join(' ')
-        cmd << " #{attr}"
-        cmd = "#{cmd}\r\n.\r\n"
-        send_command(cmd)
-        receive_response
+        cmd << " #{attr}\r\n.\r\n"
+      end
+      
+      def call(command, attributes = {})
+        if not (MAIL_COMMANDS.include?(command) or
+                DOMAIN_COMMANDS.include?(command) or
+                WORKGROUP_COMMAND.include?(command))
+          raise "Command #{command.to_s} invalid"
+        else
+          cmd = make_command_string(command, attributes)
+          send_command(cmd)
+          receive_response
+        end
       end
 
       def send_command(command)
@@ -102,22 +111,33 @@ module Opensrs
       end
 
       def receive_response
-        response = build_response("")
+        response = build_response
         parse_response(response)
       end
 
       def parse_response(response)
         match_data = /^(OK|ER) (\d+).*/.match(response)
-        status = match_data[1] if match_data and match_data.length > 2
-        status_code = match_data[2] if match_data and match_data.length > 2
+        
+        status = if match_data and match_data.length > 2 then
+                   match_data[1]
+                 else
+                   nil
+                 end
+        
+        status_code = if match_data and match_data.length > 2 then
+                        match_data[2].to_i
+                      else
+                        nil
+                      end
+        
         return {
           :status => status,
-          :status_code => status_code.to_i,
+          :status_code => status_code,
           :response_body => response
         }
       end
 
-      def build_response(partial)
+      def build_response(partial="")
         line = receive_line
         if line == ".\r\n"
           partial
