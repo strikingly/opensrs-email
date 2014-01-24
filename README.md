@@ -1,5 +1,7 @@
 # Opensrs::Email
 
+[![Build Status](https://travis-ci.org/strikingly/opensrs-email.png?branch=master)](https://travis-ci.org/strikingly/opensrs-email)
+
 API to manage opensrs domain emails through APP (OpenSRS Email Service Account Provisioning Protocol)
 
 ## Installation
