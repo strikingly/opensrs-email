@@ -1,8 +1,8 @@
 require "opensrs/email/version"
 
-require File.dirname(__FILE__) + '/email/domain'
-require File.dirname(__FILE__) + '/email/workgroup'
-require File.dirname(__FILE__) + '/email/mailbox'
+require 'opensrs/email/domain'
+require 'opensrs/email/workgroup'
+require 'opensrs/email/mailbox'
 
 require 'socket'
 require 'openssl'
