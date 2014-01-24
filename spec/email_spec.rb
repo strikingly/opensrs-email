@@ -45,17 +45,13 @@ describe Opensrs::Email::Gateway do
 
       expect(cmd).to match(/create_mailbox_forward_only/)
       
-      expect(cmd).to match(/mailbox/)
-      expect(cmd).to match(/test/)
+      expect(cmd).to match(/mailbox=\"test\"/)
 
-      expect(cmd).to match(/domain/)
-      expect(cmd).to match(/testdomain[.]com/)
+      expect(cmd).to match(/domain=\"testdomain[.]com\"/)
 
-      expect(cmd).to match(/forward_email/)
-      expect(cmd).to match(/john@mail.com/)
+      expect(cmd).to match(/forward_email=\"john@mail.com\"/)
 
-      expect(cmd).to match(/workgroup/)
-      expect(cmd).to match(/staff/)
+      expect(cmd).to match(/workgroup=\"staff\"/)
     end
   end
 end

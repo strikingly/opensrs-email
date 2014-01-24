@@ -111,22 +111,33 @@ module Opensrs
       end
 
       def receive_response
-        response = build_response("")
+        response = build_response
         parse_response(response)
       end
 
       def parse_response(response)
         match_data = /^(OK|ER) (\d+).*/.match(response)
-        status = match_data[1] if match_data and match_data.length > 2
-        status_code = match_data[2] if match_data and match_data.length > 2
+        
+        status = if match_data and match_data.length > 2 then
+                   match_data[1]
+                 else
+                   nil
+                 end
+        
+        status_code = if match_data and match_data.length > 2 then
+                        match_data[2].to_i
+                      else
+                        nil
+                      end
+        
         return {
           :status => status,
-          :status_code => (status_code.to_i if status_code),
+          :status_code => status_code,
           :response_body => response
         }
       end
 
-      def build_response(partial)
+      def build_response(partial="")
         line = receive_line
         if line == ".\r\n"
           partial
