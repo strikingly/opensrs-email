@@ -83,15 +83,24 @@ module Opensrs
         @socket = @connection = nil
       end
 
-      def call(command, attributes = {})
+      def make_command_string(command, attributes)
         cmd = command.to_s
         attr = attributes.map {|k, v|
           "#{k.to_s}=\"#{v.to_s}\""
         } .join(' ')
-        cmd << " #{attr}"
-        cmd = "#{cmd}\r\n.\r\n"
-        send_command(cmd)
-        receive_response
+        cmd << " #{attr}\r\n.\r\n"
+      end
+      
+      def call(command, attributes = {})
+        if not (MAIL_COMMANDS.include?(command) or
+                DOMAIN_COMMANDS.include?(command) or
+                WORKGROUP_COMMAND.include?(command))
+          raise "Command #{command.to_s} invalid"
+        else
+          cmd = make_command_string(command, attributes)
+          send_command(cmd)
+          receive_response
+        end
       end
 
       def send_command(command)
@@ -112,7 +121,7 @@ module Opensrs
         status_code = match_data[2] if match_data and match_data.length > 2
         return {
           :status => status,
-          :status_code => status_code.to_i,
+          :status_code => (status_code.to_i if status_code),
           :response_body => response
         }
       end
