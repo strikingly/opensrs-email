@@ -97,6 +97,7 @@ module Opensrs
                 WORKGROUP_COMMAND.include?(command))
           raise "Command #{command.to_s} invalid"
         else
+          @logger.info("Sending command: #{command.to_s}")
           cmd = make_command_string(command, attributes)
           send_command(cmd)
           receive_response
@@ -105,7 +106,6 @@ module Opensrs
 
       def send_command(command)
         if @socket and not @socket.closed?
-          @logger.info("Sending command:\n#{command}")
           @socket.write(command)
         end
       end
