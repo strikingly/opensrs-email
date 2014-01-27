@@ -53,8 +53,14 @@ module Opensrs
       
       DOMAIN_COMMANDS.each do |method_name|
         define_method("#{method_name}") { |*args|
-          positional_args = args[0...-1]
-          optional_args = args[-1] || {}
+          has_opt = args[-1].is_a? Hash
+          if has_opt
+            positional_args = args[0...-1]
+            optional_args = args[-1]
+          else
+            positional_args = args
+            optional_args = {}
+          end
           required_args = DOMAIN_REQUIRED_ARGS[method_name]
           if required_args.length != positional_args.length
             raise "Argument Error for method #{method_name}: required arguments are: #{required_args}, provided arguments are: #{positional_args}"
