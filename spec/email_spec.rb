@@ -55,4 +55,3 @@ describe Opensrs::Email::Gateway do
     end
   end
 end
-
