@@ -94,7 +94,7 @@ module Opensrs
       def call(command, attributes = {})
         if not (MAIL_COMMANDS.include?(command) or
                 DOMAIN_COMMANDS.include?(command) or
-                WORKGROUP_COMMAND.include?(command))
+                WORKGROUP_COMMANDS.include?(command))
           raise "Command #{command.to_s} invalid"
         else
           @logger.info("Sending command: #{command.to_s}")
